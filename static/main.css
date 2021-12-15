@@ -1,0 +1,17 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: seashell;
+}
+
+h1 {
+  text-align: center;
+  color: purple;
+  margin-bottom: 10px;
+}
+h3 {
+  text-align: center;
+  color: darkblue;
+  margin-top: 0;
+}
