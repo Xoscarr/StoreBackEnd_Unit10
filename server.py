@@ -10,8 +10,10 @@ import json
 from config import db, json_parse  
 from bson import ObjectId
 from bson.errors import InvalidId
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app) # allow the server to be called from any client url 
 
 about_me = {
     "name": "Oscar",
@@ -124,6 +126,26 @@ def get_products_total():
         total += price
 
     return json_parse(total)
+
+@app.route("/api/order", methods=["POST"])
+def save_order():
+    order = request.get_json()
+    
+    total = 0 
+    for prod in order["products"]:
+        print(prod["_id"])
+        db_prod = db.products.find_one({"_id": ObjectId(prod["_id"])})
+        price = db_prod["price"]
+        quantity = prod["quantity"]
+        total += price * quantity 
+
+    if total <= 0: 
+        return abort(400) #return a bad request response 
+
+    order["total"] = total 
+    db.orders.insert_one(order)
+    return json_parse(order)
+
 
 
 
